@@ -36,58 +36,37 @@ require_once 'includes/config.php';
               <div class="block__content">
                 <div class="articles articles__horizontal">
                   <?php
-                  $articles = mysqli_query($connection, "SELECT * FROM `articles`");
+                  $articles = mysqli_query($connection, "SELECT * FROM `articles` ORDER BY `id` DESC LIMIT 10");
                   ?>
                   <?php
                   while ($art = mysqli_fetch_assoc($articles))
                   {
                     ?>
                     <article class="article">
-                      <div class="article__image" style="background-image: url(/static/images/                        <?php echo $art['image']; ?>      );"></div>
+                      <div class="article__image" style="background-image: url(/static/images/<?php echo $art['image']; ?>      );"></div>
                       <div class="article__info">
                         <a href="/article.php?id=<?php echo $art['id']; ?>"><?php echo $art['title']; ?></a>
                         <div class="article__info__meta">
-                          <small>Категория: <a href="#">Программирование</a></small>
+                          <?php
+                            $art_cat = false;
+                            foreach ($categories as $cat) {
+                              if($cat['id'] == $art['category_id'])
+                              {
+                                $art_cat = $cat;
+                                break;
+                              }
+                            }
+                          ?>
+                          <small>Категория: <a href="/articles.php?category=<?php echo $art_cat['id']; ?>">
+                            <?php echo $art_cat['title']; ?>
+                          </a></small>
                         </div>
-                        <div class="article__info__preview">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna ...</div>
+                        <div class="article__info__preview"><?php echo mb_substr(strip_tags($art['text']), 0, 100, 'utf-8') . ' ...'; ?></div>
                       </div>
                     </article>
                     <?php
                   }
                   ?>
-
-                  <article class="article">
-                    <div class="article__image"></div>
-                    <div class="article__info">
-                      <a href="#">Название статьи #2</a>
-                      <div class="article__info__meta">
-                        <small>Категория: <a href="#">Lifestyle</a></small>
-                      </div>
-                      <div class="article__info__preview">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna ...</div>
-                    </div>
-                  </article>
-
-                  <article class="article">
-                    <div class="article__image"></div>
-                    <div class="article__info">
-                      <a href="#">Название статьи #3</a>
-                      <div class="article__info__meta">
-                        <small>Категория: <a href="#">Программирование</a></small>
-                      </div>
-                      <div class="article__info__preview">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna ...</div>
-                    </div>
-                  </article>
-
-                  <article class="article">
-                    <div class="article__image"></div>
-                    <div class="article__info">
-                      <a href="#">Название статьи #4</a>
-                      <div class="article__info__meta">
-                        <small>Категория: <a href="#">Lifestyle</a></small>
-                      </div>
-                      <div class="article__info__preview">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna ...</div>
-                    </div>
-                  </article>
 
                 </div>
               </div>
@@ -100,19 +79,7 @@ require_once 'includes/config.php';
       </div>
     </div>
 
-    <footer id="footer">
-      <div class="container">
-        <div class="footer__logo">
-          <h1>
-            <?php
-            echo $config['title'];
-            ?>
-          </h1>
-        </div>
-
-      </div>
-    </footer>
-
+    <?php include "includes/footer.php"; ?>
   </div>
 
 </body>

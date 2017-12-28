@@ -18,17 +18,23 @@
     </div>
   </div>
   <?php
-    $categories = mysqli_query($connection, "SELECT * FROM `articles_categories`");
+    //создаем массив из полей, которые fetch вытаскивает из БД.
+    $categories_q = mysqli_query($connection, "SELECT * FROM `articles_categories`");
+    $categories = array();
+    while ( $cat = mysqli_fetch_assoc($categories_q)) 
+    {
+      $categories[] = $cat;
+    }
   ?>
   <div class="header__bottom">
     <div class="container">
       <nav>
         <ul>
           <?php
-            while( $cat = mysqli_fetch_assoc($categories))
+            foreach ($categories as $cat)            
             {
               ?>
-              <li><a href="/$categories.php?id=<?php echo $cat['id']; ?>"><?php echo $cat['title']; ?></a></li>
+              <li><a href="/$articles.php?category=<?php echo $cat['id']; ?>"><?php echo $cat['title']; ?></a></li>
               <?php
             }
           ?>
